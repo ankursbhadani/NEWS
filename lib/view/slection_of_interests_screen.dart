@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:news/model/logo.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:news/view/dashboard.dart';
+import 'package:news/view/login_screen.dart';
 import '../data/interests.dart';
 
 class SelectInterests extends StatefulWidget {
@@ -14,6 +16,7 @@ class _SelectInterestsState extends State<SelectInterests> {
   Logo logo = Logo();
   List<String> selectedInterests = [];
   bool isButtonEnabled = false;
+  int requiredSelections = 3;
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +50,9 @@ class _SelectInterestsState extends State<SelectInterests> {
                 height: 35,
                 width: 80,
                 child: ElevatedButton(
-                  onPressed: () {}, // Always clickable
+                  onPressed: () {
+                      Navigator.of(context).push(MaterialPageRoute(builder: (context)=>const Login()));
+                  }, // Always clickable
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0XFFF42727),
                     foregroundColor: Colors.white,
@@ -86,8 +91,78 @@ class _SelectInterestsState extends State<SelectInterests> {
             ),
           ),
         ),
+        bottomNavigationBar: Container(
+          height: 100,
+          width: double.infinity,
+          child: Column(
+            children: [
+              SizedBox(
+                width: double.infinity,
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 24.0, right: 24, top: 0, bottom: 0),
+                  child: ElevatedButton(
+                    onPressed: isButtonEnabled ? () {
+                      Navigator.of(context).push(MaterialPageRoute(builder: (context)=>Dashboard()));
+                    } : (){
+                      print("on continue $isButtonEnabled");
+
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: isButtonEnabled ? const Color(0XFFF42727) : Colors.red.shade300,
+                      foregroundColor: isButtonEnabled ? Colors.white : Colors.white70,
+                      padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(3),
+                      ),
+                      textStyle: const TextStyle(fontSize: 16),
+                    ),
+                    child: Text(
+                      selectedInterests.isEmpty
+                          ? "Choose at least $requiredSelections to continue"
+                          : selectedInterests.length < requiredSelections
+                          ? "Choose ${requiredSelections - selectedInterests.length} more to continue"
+                          : "Continue",
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 8.0),
+              const Padding(
+                padding: EdgeInsets.only(left: 5.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "By continuing, you accept the",
+                      style: TextStyle(
+                        fontSize: 11,
+                        color: Colors.grey,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    SizedBox(width: 2),
+                    Text(
+                      "Terms of Use and Privacy Policy.",
+                      style: TextStyle(
+                        color: Colors.grey,
+                        decoration: TextDecoration.underline,
+                        fontSize: 11,
+                        decorationColor: Colors.grey,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                ),
+              )
+            ],
+          ),
+        ),
         body: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.only(top: 8.0, left: 8, bottom: 20, right: 30),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -112,10 +187,9 @@ class _SelectInterestsState extends State<SelectInterests> {
                     padding: const EdgeInsets.only(left: 16.0, top: 5, right: 16),
                     child: Wrap(
                       spacing: 8.0, // Space between items horizontally
-                      runSpacing: 12.0, // Space between lines
+                      runSpacing: 11.0, // Space between lines
                       children: interests.map((interest) {
                         bool isSelected = selectedInterests.contains(interest);
-                        bool shouldWrap = interest.replaceAll('#', '').length > 15;
 
                         return GestureDetector(
                           onTap: () {
@@ -129,21 +203,19 @@ class _SelectInterestsState extends State<SelectInterests> {
                             });
                           },
                           child: Container(
-                            constraints: BoxConstraints(
-                              maxWidth: screenWidth -48,
-                            ),
                             padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
                             decoration: BoxDecoration(
                               color: isSelected ? const Color(0XFFF42727) : Colors.grey.shade200,
+                              borderRadius: BorderRadius.circular(2.0),
                             ),
                             child: RichText(
                               text: TextSpan(
                                 children: [
-                                  TextSpan(
+                                  const TextSpan(
                                     text: '# ',
                                     style: TextStyle(
                                       fontSize: 16.0,
-                                      color: isSelected ? Colors.white : Colors.grey,
+                                      color: Colors.black12,
                                       fontWeight: FontWeight.normal,
                                     ),
                                   ),
@@ -151,9 +223,9 @@ class _SelectInterestsState extends State<SelectInterests> {
                                     text: interest.replaceAll('#', ''),
                                     style: GoogleFonts.firaSansCondensed(
                                       textStyle: TextStyle(
-                                        fontSize: 14.0,
+                                        fontSize: 17.0,
                                         color: isSelected ? Colors.white : Colors.black45,
-                                        fontWeight: FontWeight.bold,
+                                        fontWeight: FontWeight.w600,
                                       ),
                                     ),
                                   ),
@@ -167,32 +239,6 @@ class _SelectInterestsState extends State<SelectInterests> {
                   ),
                 ),
               ),
-              SizedBox(
-                width: double.infinity,
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 8.0, right: 8, top: 0, bottom: 0),
-                  child: ElevatedButton(
-                    onPressed: isButtonEnabled ? () {} : (){},
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: isButtonEnabled ? const Color(0XFFF42727) : Colors.red.shade300,
-                      foregroundColor: isButtonEnabled ? Colors.white : Colors.white70,
-                      padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(3),
-                      ),
-                      textStyle: const TextStyle(fontSize: 16),
-                    ),
-                    child: const Text(
-                      "Choose at least 3 to continue",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 16.0),
             ],
           ),
         ),
@@ -202,7 +248,7 @@ class _SelectInterestsState extends State<SelectInterests> {
 
   void updateButtonState() {
     setState(() {
-      isButtonEnabled = selectedInterests.length >= 3;
+      isButtonEnabled = selectedInterests.length >= requiredSelections;
     });
   }
 }

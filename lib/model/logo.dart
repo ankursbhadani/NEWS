@@ -5,13 +5,13 @@ class Logo {
     return Stack(
       children: [
         Container(
-          height: 85,
-          width: 85,
+          height: 95,
+          width: 95,
           color: const Color(0XFFF42727),
         ),
         Positioned(
-          top: 20,
-          left: 18,
+          top: 24,
+          left: 24,
           child: Container(
             height: 48,
             width: 17,
@@ -19,8 +19,8 @@ class Logo {
           ),
         ),
         Positioned(
-          top: 20,
-          left: 18,
+          top: 24,
+          left: 24,
           child: Container(
             height: 17,
             width: 50,
@@ -28,8 +28,8 @@ class Logo {
           ),
         ),
         Positioned(
-          top: 37,
-          left: 18,
+          top: 40,
+          left: 24,
           child: Container(
             height: 17,
             width: 33,
